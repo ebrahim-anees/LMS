@@ -7,12 +7,11 @@ export const AppContextProvider = (props) => {
   const currency = import.meta.env.VITE_CURRENCY;
   const [courses, setCourses] = useState([]);
   const [isEducator, setIsEducator] = useState(true);
-  useEffect(() => {
-    const fetchCourses = () => {
-      setCourses(dummyCourses);
-    };
-    fetchCourses();
-  }, []);
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+
+  const fetchCourses = () => {
+    setCourses(dummyCourses);
+  };
   const calcRating = (course) => {
     if (course.courseRatings.length === 0) return 0;
     let totalRating = 0;
@@ -45,6 +44,14 @@ export const AppContextProvider = (props) => {
     );
     return lectures;
   };
+  const fetchEnrolledCourses = () => {
+    setEnrolledCourses(dummyCourses);
+  };
+
+  useEffect(() => {
+    fetchCourses();
+    fetchEnrolledCourses();
+  }, []);
 
   const value = {
     currency,
@@ -55,6 +62,8 @@ export const AppContextProvider = (props) => {
     calcCourseDuration,
     calcNumOfLectures,
     calcDuration,
+    enrolledCourses,
+    fetchEnrolledCourses,
   };
   return (
     <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
