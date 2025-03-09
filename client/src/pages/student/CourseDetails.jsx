@@ -7,22 +7,70 @@ import { assets } from '../../assets';
 import Footer from '../../components/student/Footer';
 import YouTube from 'react-youtube';
 import CourseContentCard from '../../section/CourseContentCard';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 export default function CourseDetails() {
   const { id } = useParams();
   const [courseData, setCourseData] = useState(null);
   const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false);
   const [playerData, setPlayerData] = useState(null);
   const {
-    courses,
     calcCourseDuration,
     calcNumOfLectures,
     currency,
     calcRating,
+    serverUrl,
+    userData,
+    getToken,
   } = useContext(AppContext);
+
+  const fetchCourseData = async () => {
+    try {
+      const { data } = await axios.get(`${serverUrl}/course/${id}`);
+      if (data.success) {
+        setCourseData(data.courseData);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  const enrollCourse = async () => {
+    try {
+      if (!userData) {
+        return toast.warn('Login to Enroll');
+      }
+      if (isAlreadyEnrolled) {
+        return toast.warn('Already Enrolled');
+      }
+      const token = await getToken();
+      const { data } = await axios.post(
+        `${serverUrl}/user/purchase`,
+        { courseId: courseData._id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (data.success) {
+        const { session_url } = data;
+        window.location.replace(session_url);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
   useEffect(() => {
-    if (courses?.length > 0)
-      setCourseData(courses.find((course) => course._id === id));
-  }, [id, courses]);
+    fetchCourseData();
+  }, [id]);
+  useEffect(() => {
+    if (userData && courseData) {
+      setIsAlreadyEnrolled(userData.enrolledCourses.includes(courseData._id));
+    }
+  }, [userData, courseData]);
+
   const handlePlayerData = (videoId) => {
     if (videoId) {
       setPlayerData({ videoId });
@@ -31,7 +79,7 @@ export default function CourseDetails() {
 
   return courseData ? (
     <>
-      <div className="flex md:flex-row flex-col-reverse gap-10 relative items-start justify-between md:px-36 px-8 md:pt-30 pt-20 text-left">
+      <div className="flex items-center md:flex-row md:items-start flex-col-reverse gap-10 relative justify-between md:px-36 px-8 md:pt-30 pt-20 text-left">
         <div className="absolute top-0 left-0 w-full h-section-height -z-1 bg-gradient-to-b from-cyan-100/70"></div>
 
         <div className="max-w-xl z-10 text-gray-500">
@@ -48,7 +96,7 @@ export default function CourseDetails() {
           <p className="text-sm">
             Course by{' '}
             <span className="text-blue-600 underline">
-              {courseData?.educator?.name || 'unknown'}
+              {courseData.educator.name}
             </span>
           </p>
           <div className="pt-8 text-gray-800">
@@ -122,7 +170,10 @@ export default function CourseDetails() {
                 <p>{calcNumOfLectures(courseData)} lessons</p>
               </div>
             </div>
-            <button className="w-full bg-blue-600 text-white md:mt-6 mt-4 py-3 rounded font-medium">
+            <button
+              onClick={enrollCourse} 
+              className="w-full bg-blue-600 text-white md:mt-6 mt-4 py-3 rounded font-medium"
+            >
               {isAlreadyEnrolled ? 'Already Enrolled' : 'Enroll Now'}
             </button>
             <div className="pt-6">

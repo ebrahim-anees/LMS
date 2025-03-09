@@ -77,7 +77,7 @@ const courseSchema = new mongoose.Schema(
       min: 0,
       max: 100,
     },
-    courseContent: [chapterSchema],
+    courseContent: [chapterSchema], 
     courseRatings: [
       {
         userId: {

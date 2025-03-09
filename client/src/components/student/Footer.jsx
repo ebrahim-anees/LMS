@@ -3,8 +3,8 @@ import { assets } from '../../assets';
 
 export default function Footer() {
   return (
-    <div>
-      <footer className="bg-gray-900 md:px-36 text-left min-w-[100vw] mt-10">
+    <div className="flex flex-col h-[70vh]">
+      <footer className="bg-gray-900 md:px-36 text-left min-w-[100vw] mt-auto">
         <div className="flex flex-col md:flex-row items-start px-8 md:px-0 justify-center gap-10 md:gap-24 py-10 border-b border-white/30">
           <div className="flex flex-[2] flex-col md:items-start items-center w-full">
             <img src={assets.logo_dark} alt="logo" />
@@ -30,7 +30,7 @@ export default function Footer() {
               Subscribe to our newsletter
             </h3>
             <p className="text-sm text-white/80">
-              The latest news, rticles, and resources, sent to your inbox
+              The latest news, articles, and resources, sent to your inbox
               weekly.
             </p>
             <div className="flex items-center gap-2 pt-4">

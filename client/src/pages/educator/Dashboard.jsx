@@ -3,12 +3,33 @@ import { AppContext } from '../../context/AppContext';
 import { assets, dummyDashboardData } from '../../assets';
 import Loading from '../../section/Loading.jsx';
 import DashboardMiniCard from './../../section/DashboardMiniCard.jsx';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState(null);
-  const { currency } = useContext(AppContext);
+  const { currency, serverUrl, isEducator, getToken } = useContext(AppContext);
+
+  const fetchDashboardData = async () => {
+    try {
+      const token = await getToken();
+      const { data } = await axios.get(`${serverUrl}/educator/dashboard`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (data.success) {
+        setDashboardData(data.dashboardData);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
   useEffect(() => {
-    setDashboardData(dummyDashboardData);
-  }, []);
+    if (isEducator) {
+      fetchDashboardData();
+    }
+  }, [isEducator]);
   return dashboardData ? (
     <div className="min-h-screen flex flex-col items-start justify-between gap-8 md:p-8 md:pb-0 p-4 pt-8 pb-0">
       <div className="space-y-5">

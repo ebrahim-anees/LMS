@@ -3,12 +3,35 @@ import { AppContext } from '../../context/AppContext';
 import Loading from '../../section/Loading';
 import { assets, dummyStudentEnrolled } from '../../assets';
 import clsx from 'clsx';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 export default function StudentsEnrolled() {
+  const { serverUrl, getToken, isEducator } = useContext(AppContext);
   const [enrolledStudents, setEnrolledStudents] = useState(null);
+
+  const fetchEnrolledStudents = async () => {
+    try {
+      const token = await getToken();
+      const { data } = await axios.get(
+        `${serverUrl}/educator/enrolled-students`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (data.success) {
+        setEnrolledStudents(data.enrolledStudents.reverse());
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
   useEffect(() => {
-    setEnrolledStudents(dummyStudentEnrolled);
-  }, [dummyStudentEnrolled]);
+    if (isEducator) {
+      fetchEnrolledStudents();
+    }
+  }, [isEducator]);
   const theadClass = (i) =>
     clsx('px-4 py-3 font-semibold', {
       'hidden sm:table-cell': i === 3,

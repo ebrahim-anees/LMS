@@ -2,11 +2,35 @@ import { useState, useEffect, useContext } from 'react';
 import { AppContext } from '../../context/AppContext';
 import Loading from '../../section/Loading';
 import { clsx } from 'clsx';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 export default function Mycourses() {
-  const { courses, currency } = useContext(AppContext);
+  const { courses, currency, serverUrl, isEducator, getToken } =
+    useContext(AppContext);
   const [myCourses, setMyCourses] = useState(null);
 
-  useEffect(() => setMyCourses(courses), [courses]);
+  const fetchEducatorCourses = async () => {
+    try {
+      const token = await getToken();
+      const { data } = await axios.get(`${serverUrl}/educator/courses`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (data.success) {
+        setMyCourses(data.courses);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  useEffect(() => {
+    if (isEducator) {
+      fetchEducatorCourses();
+    }
+  }, [isEducator]);
+
   const tHeadClass = (i) =>
     clsx('px-4 py-3 font-semibold', {
       'text-center': i !== 0,

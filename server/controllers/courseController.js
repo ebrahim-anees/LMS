@@ -3,11 +3,10 @@ import Course from '../models/Course.js';
 export const getAllCourses = async (req, res) => {
   try {
     const courses = await Course.find({ isPublished: true })
-      .select(['-courseContent', '-enrolledStudents'])
       .populate({
         path: 'educator',
       });
-    res.json({ success: true, data: courses });
+    res.json({ success: true, courses });
   } catch (err) {
     res.json({ success: false, message: err.message });
   }

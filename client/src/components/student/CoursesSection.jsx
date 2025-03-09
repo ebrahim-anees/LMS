@@ -4,6 +4,7 @@ import { AppContext } from '../../context/AppContext';
 import CourseCard from './CourseCard';
 export default function CoursesSection() {
   const { courses } = useContext(AppContext);
+
   return (
     <div className="py-16 md:px-40 px-8">
       <h2 className="text-3xl font-medium text-gray-800">
@@ -15,7 +16,7 @@ export default function CoursesSection() {
         deliver results.
       </p>
       <div className="grid grid-cols-auto gap-4 px-4 my-10 md:px-0 md:my-16">
-        {courses.slice(0, 4).map((course, i) => (
+        {courses?.slice(0, 4).map((course, i) => (
           <CourseCard key={i} course={course} />
         ))}
       </div>

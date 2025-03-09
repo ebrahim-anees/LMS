@@ -9,6 +9,8 @@ export default function CourseContentCard({
   courseData,
   handlePlayerData,
   isPlayer = false,
+  progressData,
+  playerData,
 }) {
   const { calcChapterTime, calcDuration } = useContext(AppContext);
   const [openSections, setOpenSections] = useState({});
@@ -16,7 +18,7 @@ export default function CourseContentCard({
   const toggleSection = (index) => {
     setOpenSections((prev) => ({ ...prev, [index]: !prev[index] }));
   };
-
+  console.log(isPlayer);
   const lecturesClass = (index) =>
     clsx(
       'overflow-hidden transition-all duration-300',
@@ -65,7 +67,9 @@ export default function CourseContentCard({
                       src={
                         !isPlayer
                           ? assets.play_icon
-                          : false
+                          : progressData?.lectureCompleted.includes(
+                              lecture?.lectureId
+                            )
                           ? assets.blue_tick_icon
                           : assets.play_icon
                       }

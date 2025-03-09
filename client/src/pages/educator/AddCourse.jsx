@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import Quill from 'quill';
 import { assets } from '../../assets';
 import clsx from 'clsx';
@@ -8,9 +8,13 @@ import {
   addLecture,
 } from './addCourseStructure/functions';
 import Popup from './addCourseStructure/components/Popup';
+import { AppContext } from '../../context/AppContext';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 export default function AddCourse() {
   const quillRef = useRef(null);
   const editorRef = useRef(null);
+  const { serverUrl, getToken } = useContext(AppContext);
 
   const [courseTitle, setCourseTitle] = useState(''),
     [coursePrice, setCoursePrice] = useState(0),
@@ -25,6 +29,47 @@ export default function AddCourse() {
       lectureUrl: '',
       isPreviewFree: false,
     });
+
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      if (!image) {
+        toast.error('Thumbnail not selected');
+      }
+
+      const courseData = {
+        courseTitle,
+        courseDescription: quillRef.current.root.innerHTML,
+        coursePrice: Number(coursePrice),
+        discount: Number(discount),
+        courseContent: chapters,
+      };
+
+      const formData = new FormData();
+      formData.append('courseData', JSON.stringify(courseData));
+      formData.append('image', image);
+
+      const token = await getToken();
+      const { data } = await axios.post(
+        `${serverUrl}/educator/add-course`,
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (data.success) {
+        toast.success(data.message);
+        setCourseTitle('');
+        setCoursePrice(0);
+        setDiscount(0);
+        setImage(null);
+        setChapters([]);
+        quillRef.current.root.innerHTML = '';
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
 
   useEffect(() => {
     if (!quillRef.current && editorRef.current) {
@@ -41,7 +86,7 @@ export default function AddCourse() {
     <div className="h-screen overflow-scroll flex flex-col items-start justify-between md:p-8 md:pb-0 p-4 pt-8 pb-0">
       <form
         className="flex flex-col gap-4 max-w-md w-full text-gray-500"
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={(e) => handleSubmit(e)}
       >
         <p>Course Title</p>
         <input
@@ -74,7 +119,7 @@ export default function AddCourse() {
               <img
                 src={assets.file_upload_icon}
                 alt="file-upload-icon"
-                className="p-3 bg-blue-500 rounded"
+                className="p-3 bg-blue-500 rounded cursor-pointer"
               />
               <input
                 type="file"
@@ -84,7 +129,7 @@ export default function AddCourse() {
                 hidden
               />
               <img
-                src={image ? URL.createObjectURL(image) : ''}
+                src={image ? URL.createObjectURL(image) : '_'}
                 alt=""
                 className="max-h-10"
               />
@@ -97,6 +142,7 @@ export default function AddCourse() {
             type="number"
             placeholder={discount}
             onChange={(e) => setDiscount(e.target.value)}
+            value={discount}
             min={0}
             max={100}
             className="outline-none md:py-2.5 py-2 w-28 px-3 rounded border border-gray-500"

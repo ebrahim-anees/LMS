@@ -4,7 +4,7 @@ import { AppContext } from '../../context/AppContext';
 import { Link } from 'react-router-dom';
 import Rating from '../../section/Rating';
 export default function CourseCard({ course }) {
-  const { currency, calcRating } = useContext(AppContext);
+  const { currency } = useContext(AppContext);
   return (
     <Link
       to={`/course/${course._id}`}

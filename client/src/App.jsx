@@ -13,10 +13,12 @@ import StudentsEnrolled from './pages/educator/StudentsEnrolled';
 import MyCourses from './pages/educator/Mycourses';
 import Navbar from './components/student/Navbar.jsx';
 import 'quill/dist/quill.snow.css';
+import { ToastContainer } from 'react-toastify';
 export default function App() {
   const isEducatorRoute = useMatch('/educator/*');
   return (
     <div className="text-default min-h-screen bg-white">
+      <ToastContainer autoClose={3000} />
       {!isEducatorRoute ? <Navbar /> : null}
       <Routes>
         <URL path="/" element={<Home />} />
