@@ -5,7 +5,7 @@ import Footer from '../../components/educator/Footer';
 import Sidebar from '../../components/educator/Sidebar';
 export default function Educator() {
   return (
-    <div className="text-default min-h-screen bg-white">
+    <div className="text-default min-h-scree">
       <Navbar />
       <div className="flex">
         <Sidebar />

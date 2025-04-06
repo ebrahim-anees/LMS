@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, Route as URL, useMatch } from 'react-router-dom';
 import Home from './pages/student/Home';
 import CoursesList from './pages/student/CoursesList';
@@ -14,11 +13,26 @@ import MyCourses from './pages/educator/Mycourses';
 import Navbar from './components/student/Navbar.jsx';
 import 'quill/dist/quill.snow.css';
 import { ToastContainer } from 'react-toastify';
+import { useContext } from 'react';
+import { AppContext } from './context/AppContext.jsx';
+import clsx from 'clsx';
 export default function App() {
   const isEducatorRoute = useMatch('/educator/*');
+  const { theme } = useContext(AppContext);
+
+  const bgClass = clsx(`text-default min-h-screen`, {
+    'bg-light-bg': theme === 'light',
+    'bg-dark-black': theme === 'dark',
+  });
   return (
-    <div className="text-default min-h-screen bg-white">
-      <ToastContainer autoClose={3000} />
+    <div className={bgClass}>
+      <ToastContainer
+        autoClose={4000}
+        theme={theme}
+        toastClassName={() =>
+          `top-14 relative ${theme === 'light' ? 'toast-light' : 'toast-dark'}`
+        }
+      />
       {!isEducatorRoute ? <Navbar /> : null}
       <Routes>
         <URL path="/" element={<Home />} />

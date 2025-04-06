@@ -3,9 +3,109 @@
 @tailwind components;
 @tailwind utilities;
 
-
 * {
   font-family: Outfit, sans-serif;
+}
+
+@layer components {
+  .btn-light {
+    @apply bg-light-purple text-light-white 
+          hover:bg-light-purple/90 hover:shadow-light-hover 
+          active:bg-light-purple/80 active:shadow-light-active
+          transition-all duration-300 font-medium
+          focus:ring-1 focus:ring-light-sky focus:outline-none;
+  }
+
+  .btn-dark {
+    @apply bg-dark-gold text-dark-black 
+          hover:bg-dark-gold/80 hover:shadow-dark-hover 
+          active:bg-dark-gold/70 active:shadow-dark-active
+          transition-all duration-300 font-medium
+          focus:ring-1 focus:ring-dark-blue/50 focus:outline-none;
+  }
+  .gradient-light {
+    @apply bg-gradient-to-r border-light-purple/20 from-light-sky/5 via-light-purple/10 to-light-purple/20 hover:shadow-[0_4px_15px_rgba(79,70,229,0.15)] focus-within:shadow-[0_4px_15px_rgba(79,70,229,0.15)];
+  }
+  .gradient-dark {
+    @apply bg-gradient-to-r border-dark-blue/30 bg-gradient-to-r from-[rgba(59,130,246,0.02)] via-[rgba(59,130,246,0.08)] to-[rgba(59,130,246,0.12)] hover:shadow-[0_4px_15px_rgba(59,130,246,0.2)] focus-within:shadow-[0_4px_15px_rgba(59,130,246,0.2)];
+  }
+  .toast-light {
+    @apply bg-gradient-to-br from-light-gray via-light-sky-07 to-light-gray 
+            text-light-black font-semibold text-[15px] px-4 py-3 rounded-lg flex items-center justify-center 
+            w-[320px] min-h-[65px] max-w-[380px]
+            shadow-md hover:shadow-lg border border-light-gray/50;
+  }
+  .toast-dark {
+    @apply bg-gradient-to-br from-dark-dGray via-dark-gold-15 to-dark-dGray 
+            text-dark-white font-semibold text-[15px] px-4 py-3 rounded-lg flex items-center justify-center 
+            w-[320px] min-h-[65px] max-w-[380px]
+            shadow-md hover:shadow-lg border border-dark-dGray/50;
+  }
+  .quill-light {
+    @apply text-light-purple gradient-light rounded-md min-h-[125px];
+  }
+
+  .quill-dark {
+    @apply text-dark-gold gradient-dark rounded-md h-[125px];
+  }
+
+  .quill-wrapper .ql-toolbar,
+  .quill-wrapper .ql-container {
+    border: transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  .quill-light .ql-toolbar {
+    border: 1px solid rgb(79 70 229 / 0.2) !important;
+    border-radius: 6px 6px 0 0 !important;
+  }
+  .quill-light .ql-toolbar .ql-picker-options {
+    background-color: rgb(249 250 251);
+    border-radius: 6px;
+    border: 1px solid rgb(79 70 229 / 0.2) !important;
+    padding: 10px 15px;
+  }
+  .quill-light .ql-toolbar * {
+    color: rgba(79, 70, 229, 0.5) !important;
+    stroke: rgba(79, 70, 229, 0.5) !important;
+    transition: 0.2s ease-in-out;
+  }
+  .quill-light .ql-toolbar button.ql-active *,
+  .quill-light .ql-toolbar span:first-of-type span:hover::before,
+  .quill-light .ql-toolbar svg:hover * {
+    color: rgba(79, 70, 229) !important;
+    stroke: rgba(79, 70, 229) !important;
+  }
+
+  .quill-dark .ql-toolbar {
+    border: 1px solid rgb(59 130 246 / 0.2) !important;
+    border-radius: 6px 6px 0 0 !important;
+  }
+  .quill-dark .ql-toolbar .ql-picker-options {
+    background-color: rgb(17 24 39);
+    border-radius: 6px;
+    border: 1px solid rgb(59 130 246 / 0.2) !important;
+    padding: 10px 15px;
+  }
+  .quill-dark .ql-toolbar * {
+    color: rgba(251, 191, 3, 0.4) !important;
+    stroke: rgba(251, 191, 3, 0.4) !important;
+  }
+  .quill-dark .ql-toolbar button.ql-active *,
+  .quill-dark .ql-toolbar span:first-of-type span:hover::before,
+  .quill-dark .ql-toolbar svg:hover * {
+    color: rgba(251, 191, 3) !important;
+    stroke: rgba(251, 191, 3) !important;
+  }
+
+  .quill-light .ql-container {
+    border: 1px solid rgb(79 70 229 / 0.2) !important;
+    border-radius: 0px 0px 6px 6px !important;
+  }
+  .quill-dark .ql-container {
+    border: 1px solid rgb(59 130 246 / 0.2) !important;
+    border-radius: 0px 0px 6px 6px !important;
+  }
 }
 
 @layer base {
@@ -18,7 +118,7 @@
 }
 .rich-text {
   font-size: 15px;
-  color: #7a7b7d;
+  color: inherit;
 
   p {
     margin-bottom: 16px;
@@ -27,42 +127,42 @@
   h1 {
     font-size: 36px;
     font-weight: 800;
-    color: #252525;
+    color: inherit;
     margin: 32px 0;
   }
 
   h2 {
     font-size: 22px;
     font-weight: 700;
-    color: #252525;
+    color: inherit;
     margin: 24px 0;
   }
 
   h3 {
     font-size: 18px;
     font-weight: 600;
-    color: #333333;
+    color: inherit;
     margin: 20px 0;
   }
 
   h4 {
     font-size: 16px;
     font-weight: 500;
-    color: #444444;
+    color: inherit;
     margin: 16px 0;
   }
 
   h5 {
     font-size: 14px;
     font-weight: 400;
-    color: #555555;
+    color: inherit;
     margin: 12px 0;
   }
 
   h6 {
     font-size: 12px;
     font-weight: 400;
-    color: #666666;
+    color: inherit;
     margin: 8px 0;
   }
 

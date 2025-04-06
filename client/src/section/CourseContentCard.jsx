@@ -12,7 +12,7 @@ export default function CourseContentCard({
   progressData,
   playerData,
 }) {
-  const { calcChapterTime, calcDuration } = useContext(AppContext);
+  const { calcChapterTime, calcDuration, theme } = useContext(AppContext);
   const [openSections, setOpenSections] = useState({});
   const navigate = useNavigate();
   const toggleSection = (index) => {
@@ -38,15 +38,23 @@ export default function CourseContentCard({
         {courseData.courseContent.map((chapter, index) => (
           <div
             key={index}
-            className="border border-gray-300 bg-white mb-2 rounded"
+            className={`border-[1px] bg-gradient-to-r ${
+              theme === 'light'
+                ? 'text-dark-dGray border-light-purple/20 from-light-white via-light-purple/5 to-light-purple/10 hover:shadow-[0_4px_15px_rgba(79,70,229,0.15)]'
+                : 'text-dark-gray border-dark-blue/30 bg-gradient-to-r from-[rgba(59,130,246,0.02)] via-[rgba(59,130,246,0.08)] to-[rgba(59,130,246,0.12)] hover:shadow-[0_4px_15px_rgba(59,130,246,0.2)]'
+            } mb-5 rounded-lg transition-all duration-300`}
           >
             <div
-              className="flex items-center justify-between px-4 py-3 cursor-pointer select-none"
+              className={`flex items-center justify-between px-4 py-3 cursor-pointer select-none`}
               onClick={() => toggleSection(index)}
             >
               <div className="flex items-center gap-2">
                 <img
-                  src={assets.down_arrow_icon}
+                  src={
+                    theme === 'light'
+                      ? assets.light_down_arrow_icon
+                      : assets.dark_down_arrow_icon
+                  }
                   alt="arrow_icon"
                   className={arrowClass(index)}
                 />
@@ -59,24 +67,48 @@ export default function CourseContentCard({
                 {calcChapterTime(chapter)}
               </p>
             </div>
-            <div className={lecturesClass(index)}>
-              <ul className="list-disc md:pl-10 pl-4 pr-4 py-2 text-gray-600 border-t border-gray-300">
+            <div
+              className={`${lecturesClass(index)} ${
+                theme === 'light'
+                  ? 'bg-light-purple/5 rounded-b-lg shadow-inner'
+                  : 'bg-dark-blue/5 rounded-b-lg shadow-inner'
+              }`}
+            >
+              <ul
+                className={`list-disc md:pl-10 pl-4 pr-4 py-2 border-t ${
+                  theme === 'light'
+                    ? 'border-light-purple/20'
+                    : 'border-dark-blue/20'
+                }`}
+              >
                 {chapter.chapterContent.map((lecture, i) => (
                   <li key={i} className="flex items-start gap-2 py-1">
                     <img
                       src={
                         !isPlayer
-                          ? assets.play_icon
+                          ? theme === 'light'
+                            ? assets.light_play_icon
+                            : assets.dark_play_icon
                           : progressData?.lectureCompleted.includes(
                               lecture?.lectureId
                             )
-                          ? assets.blue_tick_icon
-                          : assets.play_icon
+                          ? theme === 'light'
+                            ? assets.blue_tick_icon
+                            : assets.blue_tick_icon
+                          : theme === 'light'
+                          ? assets.light_play_icon
+                          : assets.dark_play_icon
                       }
                       alt="play_icon"
                       className="w-4 h-4 mt-1"
                     />
-                    <div className="flex items-center justify-between w-full text-gray-800 text-xs md:text-default">
+                    <div
+                      className={`flex items-center justify-between w-full ${
+                        theme === 'light'
+                          ? 'text-light-dGray'
+                          : 'text-dark-gray'
+                      } text-xs md:text-default`}
+                    >
                       <p>{lecture.lectureTitle}</p>
                       <div className="flex gap-2">
                         {lectureState(lecture) && (

@@ -13,6 +13,7 @@ export const AppContextProvider = (props) => {
   const [isEducator, setIsEducator] = useState(false);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [userData, setUserData] = useState(null);
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
   const { getToken } = useAuth();
   const { user } = useUser();
@@ -99,6 +100,12 @@ export const AppContextProvider = (props) => {
     }
   };
 
+  const toggleTheme = () => {
+    const newMode = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newMode);
+    localStorage.setItem('theme', newMode);
+  };
+
   useEffect(() => {
     fetchCourses();
   }, []);
@@ -126,6 +133,8 @@ export const AppContextProvider = (props) => {
     setUserData,
     getToken,
     fetchCourses,
+    theme,
+    toggleTheme,
   };
   return (
     <AppContext.Provider value={value}>{props.children}</AppContext.Provider>

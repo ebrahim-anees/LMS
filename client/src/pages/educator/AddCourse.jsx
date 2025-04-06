@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 export default function AddCourse() {
   const quillRef = useRef(null);
   const editorRef = useRef(null);
-  const { serverUrl, getToken } = useContext(AppContext);
+  const { serverUrl, getToken, theme } = useContext(AppContext);
 
   const [courseTitle, setCourseTitle] = useState(''),
     [coursePrice, setCoursePrice] = useState(0),
@@ -78,48 +78,103 @@ export default function AddCourse() {
       });
     }
   }, []);
+  // useEffect(() => {
+  //   if (editorRef.current) {
+  //     editorRef.current.classList.remove(
+  //       'text-light-purple',
+  //       'gradient-light',
+  //       'text-dark-gold',
+  //       'gradient-dark'
+  //     );
+
+  //     if (theme === 'light') {
+  //       editorRef.current.classList.add('text-light-purple', 'gradient-light');
+  //     } else {
+  //       editorRef.current.classList.add('text-dark-gold', 'gradient-dark');
+  //     }
+  //   }
+  // }, [theme, editorRef]);
   const dropdownClass = (chapter) =>
     clsx('mr-2 cursor-pointer transition-all', {
       '-rotate-90': chapter.collapsed,
     });
+  const labelColor = clsx(
+    theme === 'light' ? 'text-light-purple' : 'text-dark-gold',
+    'font-medium'
+  );
   return (
     <div className="h-screen overflow-scroll flex flex-col items-start justify-between md:p-8 md:pb-0 p-4 pt-8 pb-0">
       <form
         className="flex flex-col gap-4 max-w-md w-full text-gray-500"
         onSubmit={(e) => handleSubmit(e)}
       >
-        <p>Course Title</p>
-        <input
-          type="text"
-          onChange={(e) => setCourseTitle(e.target.value)}
-          value={courseTitle}
-          placeholder="Type here"
-          className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500"
-          required
-        />
-        <div className="flex flex-col gap-1">
-          <p>Course Description</p>
-          <div ref={editorRef}></div>
+        <div className="flex flex-col gap-2">
+          <p className={labelColor}>Course Title</p>
+          <div
+            className={`border bg-gradient-to-r rounded-md md:py-2.5 py-2 px-3
+            ${
+              theme === 'light'
+                ? 'text-light-purple gradient-light'
+                : 'text-dark-gold gradient-dark'
+            }
+            `}
+          >
+            <input
+              type="text"
+              onChange={(e) => setCourseTitle(e.target.value)}
+              value={courseTitle}
+              placeholder="Type here"
+              className={`outline-none w-[100%] bg-transparent`}
+              required
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <p className={labelColor}>Course Description</p>
+          <div
+            className={`flex flex-col quill-wrapper ${
+              theme === 'light' ? 'quill-light' : 'quill-dark'
+            }`}
+          >
+            <div ref={editorRef}></div>
+          </div>
         </div>
 
         <div className="flex items-center justify-between flex-wrap">
-          <div className="flex-flex-col gap-1">
-            <p>Course Price</p>
-            <input
-              type="number"
-              onChange={(e) => setCoursePrice(e.target.value)}
-              value={coursePrice}
-              placeholder={coursePrice}
-              className="outline-none md:py-2.5 py-2 px-3 w-28 rounded border border-gray-500"
-            />
+          <div className="flex flex-col gap-2">
+            <p className={labelColor}>Course Price</p>
+            <div
+              className={`border bg-gradient-to-r rounded-md md:py-2.5 py-2 px-3 w-28
+          ${
+            theme === 'light'
+              ? 'text-light-purple gradient-light'
+              : 'text-dark-gold gradient-dark'
+          }
+          `}
+            >
+              <input
+                type="number"
+                onChange={(e) => setCoursePrice(e.target.value)}
+                value={coursePrice}
+                placeholder={coursePrice}
+                className={`w-[100%] bg-transparent outline-none`}
+                required
+                min={0}
+              />
+            </div>
           </div>
           <div className="flex md:flex-row flex-col items-center gap-3">
-            <p>Course Thumbnail</p>
+            <p className={labelColor}>Course Thumbnail</p>
             <label htmlFor="thumbnailImage" className="flex items-center gap-3">
               <img
                 src={assets.file_upload_icon}
                 alt="file-upload-icon"
-                className="p-3 bg-blue-500 rounded cursor-pointer"
+                className={`p-3 rounded cursor-pointer duration-500 ${
+                  theme === 'light'
+                    ? 'bg-light-purple/85 hover:bg-light-purple active:bg-light-purple/80 active:shadow-light-active'
+                    : 'bg-dark-gold/85 hover:bg-dark-gold active:bg-dark-gold/80 active:shadow-dark-active'
+                }`}
               />
               <input
                 type="file"
@@ -136,29 +191,54 @@ export default function AddCourse() {
             </label>
           </div>
         </div>
-        <div className="flex flex-col gap-1">
-          <p>Discount %</p>
-          <input
-            type="number"
-            placeholder={discount}
-            onChange={(e) => setDiscount(e.target.value)}
-            value={discount}
-            min={0}
-            max={100}
-            className="outline-none md:py-2.5 py-2 w-28 px-3 rounded border border-gray-500"
-            required
-          />
+        <div className="flex flex-col gap-2">
+          <p className={labelColor}>Discount %</p>
+          <div
+            className={`border bg-gradient-to-r rounded-md md:py-2.5 py-2 w-28 px-3
+          ${
+            theme === 'light'
+              ? 'text-light-purple gradient-light'
+              : 'text-dark-gold gradient-dark'
+          }
+          `}
+          >
+            <input
+              type="number"
+              placeholder={discount}
+              onChange={(e) => setDiscount(e.target.value)}
+              value={discount}
+              min={0}
+              max={100}
+              className={`w-[100%] bg-transparent outline-none`}
+              required
+            />
+          </div>
         </div>
         <div>
           {chapters.map((chapter, chIndex) => (
-            <div key={chIndex} className="bg-white border rounded-lg mb-4">
+            <div
+              key={chIndex}
+              className={`bg-gradient-to-t border rounded-lg mb-4  ${
+                theme === 'light'
+                  ? 'border-light-purple/20 from-light-sky-07 to-light-sky-40 text-light-black'
+                  : 'border-dark-blue/30 from-dark-gold-001 to-dark-gold-35 text-dark-white'
+              }`}
+            >
               <div className="flex justify-between items-center p-4 border-b">
                 <div className="flex items-center">
                   <img
-                    src={assets.dropdown_icon}
+                    src={
+                      theme === 'light'
+                        ? assets.light_dropdown_icon
+                        : assets.dark_dropdown_icon
+                    }
                     alt="dropdown_icon"
                     width={14}
-                    className={dropdownClass(chapter)}
+                    className={`${dropdownClass(chapter)} ${
+                      theme === 'light'
+                        ? 'stroke-light-purple'
+                        : 'stroke-dark-gold'
+                    }`}
                     onClick={() =>
                       handleChapter(
                         'toggle',
@@ -172,11 +252,13 @@ export default function AddCourse() {
                     {chIndex + 1} {chapter.chapterTitle}
                   </span>
                 </div>
-                <span className="text-gray-500">
-                  {chapter.chapterContent.length} lectures
-                </span>
+                <span>{chapter.chapterContent.length} lectures</span>
                 <img
-                  src={assets.cross_icon}
+                  src={
+                    theme === 'light'
+                      ? assets.light_cross_icon
+                      : assets.dark_cross_icon
+                  }
                   alt="delete_icon"
                   className="cursor-pointer"
                   onClick={() =>
@@ -202,14 +284,22 @@ export default function AddCourse() {
                         <a
                           href={lecture.lectureUrl}
                           target="_blank"
-                          className="text-blue-500"
+                          className={`${
+                            theme === 'light'
+                              ? 'text-light-purple'
+                              : 'text-dark-blue'
+                          }`}
                         >
                           Link
                         </a>{' '}
                         - {lecture.isPreviewFree ? 'Free Preview' : 'Paid'}
                       </span>
                       <img
-                        src={assets.cross_icon}
+                        src={
+                          theme === 'light'
+                            ? assets.light_cross_icon
+                            : assets.dark_cross_icon
+                        }
                         alt="delete_icon"
                         className="cursor-pointer"
                         onClick={() =>
@@ -227,7 +317,9 @@ export default function AddCourse() {
                     </div>
                   ))}
                   <div
-                    className="inline-flex bg-gray-100 p-2 rounded cursor-pointer mt-2"
+                    className={`inline-flex p-2 mt-2 rounded cursor-pointer
+                      ${theme === 'light' ? 'btn-light' : 'btn-dark'}
+                      `}
                     onClick={() =>
                       handleLecture(
                         'add',
@@ -246,7 +338,11 @@ export default function AddCourse() {
             </div>
           ))}
           <div
-            className="flex justify-center items-center bg-blue-100 p-2 rounded-lg cursor-pointer"
+            className={`flex justify-center items-center p-2 rounded-lg cursor-pointer transition-all duration-500 ${
+              theme === 'light'
+                ? 'bg-gradient-to-r from-light-purple/35 via-light-purple to-light-purple/35 hover:from-light-purple hover:to-light-purple text-light-white'
+                : 'bg-gradient-to-r from-dark-gold/35 via-dark-gold to-dark-gold/35 hover:from-dark-gold hover:to-dark-gold text-dark-black'
+            }`}
             onClick={() => handleChapter('add', chapters, setChapters)}
           >
             + Add Chapter
@@ -265,7 +361,9 @@ export default function AddCourse() {
         </div>
         <button
           type="submit"
-          className="bg-black text-white w-max py-2.5 px-8 rounded my-4"
+          className={`w-max py-2.5 px-8 rounded my-4
+            ${theme === 'light' ? 'btn-light' : 'btn-dark'}
+            `}
         >
           Add
         </button>
