@@ -1,5 +1,4 @@
 import { createContext, useState, useEffect } from 'react';
-import { dummyCourses } from '../assets';
 import humanizeDuration from 'humanize-duration';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import axios from 'axios';

@@ -12,11 +12,11 @@ import Loading from './../../section/Loading';
 export default function Player() {
   const {
     enrolledCourses,
-    calcChapterTime,
     fetchEnrolledCourses,
     serverUrl,
     userData,
     getToken,
+    theme,
   } = useContext(AppContext);
   const { courseId } = useParams();
   const [courseData, setCourseData] = useState(null);
@@ -111,7 +111,13 @@ export default function Player() {
     <>
       <div className="p-4 sm:p-10 flex flex-col-reverse md:grid md:grid-cols-2 gap-10 md:px-36">
         <div className="text-gray-800">
-          <h2 className="text-xl font-semibold">Course Structure</h2>
+          <h2
+            className={`text-xl font-semibold ${
+              theme === 'light' ? 'text-light-purple' : 'text-dark-gold'
+            }`}
+          >
+            Course Structure
+          </h2>
 
           <CourseContentCard
             courseData={courseData}
@@ -121,28 +127,38 @@ export default function Player() {
             playerData={playerData}
           />
           <div className="flex items-center gap-2 py-3 mt-10">
-            <h3 className="text-xl font-bold">Rate this Course:</h3>
-            <Rating 
-              initialRating={initialRating} 
-              onRate={handleRate} 
-            />
+            <h3
+              className={`text-xl font-bold ${
+                theme === 'light' ? 'text-light-dGray' : 'text-dark-gray'
+              }`}
+            >
+              Rate this Course:
+            </h3>
+            <Rating initialRating={initialRating} onRate={handleRate} />
           </div>
         </div>
         <div className="md:mt-10">
           {playerData?.lectureUrl ? (
             <div>
+              {console.log(playerData.lectureUrl)}
               <YouTube
-                videoId={playerData.lectureUrl.split('/').pop()}
+                videoId={playerData.lectureUrl.split('v=')[1].split('&')[0]} // Extract the video ID correctly
                 iframeClassName="w-full aspect-video"
               />
-              <div className="flex justify-between items-center mt-1">
+              <div
+                className={`flex justify-between items-center mt-1 ${
+                  theme === 'light' ? 'text-light-black' : 'text-dark-white'
+                }`}
+              >
                 <p>
                   {playerData.chapter}.{playerData.lecture}{' '}
                   {playerData.lectureTitle}
                 </p>
                 <button
                   onClick={() => markLectureAsCompleted(playerData.lectureId)}
-                  className="text-blue-600"
+                  className={`${
+                    theme === 'light' ? 'text-light-purple' : 'text-dark-blue'
+                  }`}
                 >
                   {progressData?.lectureCompleted.includes(playerData.lectureId)
                     ? 'Completed'
@@ -151,7 +167,11 @@ export default function Player() {
               </div>
             </div>
           ) : (
-            <img src={courseData?.courseThumbnail} alt="course_thumbnail" />
+            <img
+              src={courseData?.courseThumbnail}
+              alt="course_thumbnail"
+              className="w-full"
+            />
           )}
         </div>
       </div>

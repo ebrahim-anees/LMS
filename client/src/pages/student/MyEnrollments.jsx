@@ -21,14 +21,6 @@ export default function MyEnrollments() {
   } = useContext(AppContext);
   const [progressArray, setProgressArray] = useState([]);
 
-  const dummyProgressArray = [
-    { totalLectures: 20, lectureCompleted: 5 },
-    { totalLectures: 15, lectureCompleted: 10 },
-    { totalLectures: 30, lectureCompleted: 25 },
-    { totalLectures: 12, lectureCompleted: 12 }, // Completed course
-    { totalLectures: 18, lectureCompleted: 7 },
-  ];
-
   const getCourseProgress = async () => {
     try {
       const token = await getToken();
@@ -49,10 +41,8 @@ export default function MyEnrollments() {
           };
         })
       );
-      // setProgressArray(tempProgressArray);
-      setProgressArray(dummyProgressArray);
+      setProgressArray(tempProgressArray);
     } catch (err) {
-      console.log('here it is');
       toast.error(err.message);
     }
   };

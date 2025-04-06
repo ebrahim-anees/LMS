@@ -140,9 +140,9 @@ export const getEnrolledStudentsData = async (req, res) => {
       enrolledStudents,
     });
   } catch (err) {
-    return {
+    res.json({
       success: false,
       message: err.message,
-    };
+    });
   }
 };

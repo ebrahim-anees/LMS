@@ -23,7 +23,7 @@ export default function CourseCard({ course }) {
         <h3 className={`text-base font-semibold line-clamp-1 ${theme === 'light'? 'text-light-black':'text-dark-white'}`}>
           {course.courseTitle}
         </h3>
-        <p className={`${theme === 'light'? 'text-light-dGray opacity-50': 'text-dark-gray opacity-50'}`}>{course.educator.name}</p>
+        <p className={`${theme === 'light'? 'text-light-dGray opacity-50': 'text-dark-gray opacity-50'}`}>{course?.educator?.name}</p>
         <Rating course={course} />
         <p className={`text-base font-semibold ${theme === 'light'? 'text-light-dGray': 'text-dark-gray'}`}>
           {currency}

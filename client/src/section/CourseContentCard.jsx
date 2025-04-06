@@ -10,15 +10,12 @@ export default function CourseContentCard({
   handlePlayerData,
   isPlayer = false,
   progressData,
-  playerData,
 }) {
   const { calcChapterTime, calcDuration, theme } = useContext(AppContext);
   const [openSections, setOpenSections] = useState({});
-  const navigate = useNavigate();
   const toggleSection = (index) => {
     setOpenSections((prev) => ({ ...prev, [index]: !prev[index] }));
   };
-  console.log(isPlayer);
   const lecturesClass = (index) =>
     clsx(
       'overflow-hidden transition-all duration-300',
@@ -93,8 +90,8 @@ export default function CourseContentCard({
                               lecture?.lectureId
                             )
                           ? theme === 'light'
-                            ? assets.blue_tick_icon
-                            : assets.blue_tick_icon
+                            ? assets.light_blue_tick_icon
+                            : assets.dark_blue_tick_icon
                           : theme === 'light'
                           ? assets.light_play_icon
                           : assets.dark_play_icon
@@ -113,7 +110,11 @@ export default function CourseContentCard({
                       <div className="flex gap-2">
                         {lectureState(lecture) && (
                           <p
-                            className="text-blue-500 cursor-pointer"
+                            className={`cursor-pointer ${
+                              theme === 'light'
+                                ? 'text-light-purple'
+                                : 'text-dark-blue'
+                            }`}
                             onClick={() => {
                               if (isPlayer) {
                                 handlePlayerData(lecture, index, i);

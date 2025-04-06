@@ -4,7 +4,6 @@ import Loading from '../../section/Loading.jsx';
 import DashboardMiniCard from './../../section/DashboardMiniCard.jsx';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { dummyDashboardData } from './../../assets';
 
 export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState(null);
@@ -13,32 +12,32 @@ export default function Dashboard() {
 
   const fetchDashboardData = async (retry = false) => {
     try {
-      const token = await getToken();
+      let token = await getToken();
+      console.log(token);
       if (!token && retry) {
         token = await getToken(true);
       }
       const { data } = await axios.get(`${serverUrl}/educator/dashboard`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (data.success) {
-        setDashboardData(dummyDashboardData);
-        // setDashboardData(data.dashboardData);
+      if (data?.success) {
+        setDashboardData(data.dashboardData);
       } else {
         toast.error(data.message);
       }
     } catch (err) {
       if (!retry && err.response?.status === 401) {
-        // Retry once with a new token if unauthorized
         return fetchDashboardData(true);
       }
       toast.error(err.response?.data?.message || err.message);
+      console.log('2');
     }
   };
   useEffect(() => {
     if (isEducator) {
       fetchDashboardData();
     }
-  }, [isEducator]);
+  }, [isEducator, getToken]);
 
   return dashboardData ? (
     <div

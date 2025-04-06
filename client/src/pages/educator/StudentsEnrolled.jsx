@@ -95,12 +95,12 @@ export default function StudentsEnrolled() {
                   {i + 1}
                 </td>
                 <td className="md:px-4 py-3 flex items-center space-x-3">
+                  {console.log(item.student.imageUrl)}
                   <img
                     src={item.student.imageUrl}
                     alt="student_image"
                     className="w-9 h-9 rounded-full"
                   />
-                  {console.log(item.student)}
                   <span className="truncate">{item.student.name}</span>
                 </td>
                 <td className="px-4 py-3 truncate">{item.courseTitle}</td>

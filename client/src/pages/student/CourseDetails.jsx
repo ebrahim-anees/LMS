@@ -119,7 +119,7 @@ export default function CourseDetails() {
                 theme === 'light' ? 'text-light-purple' : 'text-dark-blue'
               } underline`}
             >
-              {courseData.educator.name}
+              {courseData?.educator?.name}
             </span>
           </p>
           <div className="pt-8 text-gray-800">
@@ -167,6 +167,7 @@ export default function CourseDetails() {
           }
           `}
         >
+          {console.log(playerData?.videoId)}
           {playerData ? (
             <YouTube
               videoId={playerData.videoId}
